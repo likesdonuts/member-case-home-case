@@ -187,10 +187,11 @@
       },
     ];
 
-    function buildDocUrl(court, docId) {
-      if (!court || !docId) return null;
-      // Placeholder URL pattern — swap in the real base URL as needed
-      return `https://ecf.${court.toLowerCase()}.uscourts.gov/doc1/${docId}`;
+    const BLAW_BASE = "https://www.bloomberglaw.com/product/blaw/document/";
+
+    function buildDocUrl(docId) {
+      if (!docId) return null;
+      return `${BLAW_BASE}${docId}`;
     }
 
     function renderCell(text, href) {
@@ -206,8 +207,8 @@
     const tbody = document.getElementById("case-table-body");
 
     cases.forEach(c => {
-      const memberHref = buildDocUrl(c.consol_juris_court, c.consol_juris_doc_id);
-      const homeHref   = buildDocUrl(c.home_juris_court,  c.home_juris_doc_id);
+      const memberHref = buildDocUrl(c.consol_juris_doc_id);
+      const homeHref   = buildDocUrl(c.home_juris_doc_id);
 
       const row = document.createElement("tr");
       row.innerHTML = `
