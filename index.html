@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member Case - Home Case Look Up</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f4f6f9;
+      color: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #1a1a2e;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      max-width: 860px;
+      overflow-x: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+      background: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.925rem;
+    }
+
+    /* Top header row (supertitles) */
+    thead tr.supertitle th {
+      background: #1a1a2e;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 12px 20px;
+      text-align: center;
+    }
+
+    thead tr.supertitle th.empty {
+      background: #1a1a2e;
+      border-right: 2px solid #3a3a5e;
+    }
+
+    thead tr.supertitle th.home-case-super {
+      border-left: 2px solid rgba(255,255,255,0.15);
+    }
+
+    /* Column title row */
+    thead tr.col-titles th {
+      background: #2d2d4e;
+      color: #d0d4e8;
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      text-align: left;
+      border-bottom: 2px solid #4a4a7a;
+    }
+
+    thead tr.col-titles th:not(:first-child) {
+      border-left: 1px solid #3a3a5e;
+    }
+
+    /* Body rows */
+    tbody tr {
+      border-bottom: 1px solid #e8eaf0;
+      transition: background 0.15s ease;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: #f0f2f8;
+    }
+
+    tbody td {
+      padding: 16px 20px;
+      vertical-align: middle;
+    }
+
+    tbody td:not(:first-child) {
+      border-left: 1px solid #e8eaf0;
+    }
+
+    /* Member Case column — distinct left border accent */
+    tbody td:first-child {
+      border-left: 4px solid #4f6ef7;
+      font-weight: 500;
+    }
+
+    /* Home Case columns — subtle separator */
+    tbody td.home-col {
+      color: #444;
+    }
+
+    /* Hyperlinks */
+    a.case-link {
+      color: #4f6ef7;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a.case-link:hover {
+      text-decoration: underline;
+      color: #2d4ed8;
+    }
+
+    /* Empty / none value */
+    .empty-value {
+      color: #aab0c6;
+      font-style: italic;
+      font-size: 0.85rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.25rem; }
+      tbody td, thead tr.col-titles th { padding: 12px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Member Case &ndash; Home Case Look Up</h1>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr class="supertitle">
+          <th class="empty" rowspan="1"></th>
+          <th class="home-case-super" colspan="2">Home Case</th>
+        </tr>
+        <tr class="col-titles">
+          <th>Member Case</th>
+          <th>Case ID</th>
+          <th>Court</th>
+        </tr>
+      </thead>
+      <tbody id="case-table-body">
+        <!-- populated by JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const cases = [
+      {
+        consol_juris_case_id: "2:20-cv-01973",
+        consol_juris_court:   "dsc",
+        consol_juris_doc_id:  "X1Q6O6TQBG82",
+        home_juris_case_id:   "none",
+        home_juris_court:     "",
+        home_juris_doc_id:    "",
+      },
+      {
+        consol_juris_case_id: "2:20-cv-02030",
+        consol_juris_court:   "dsc",
+        consol_juris_doc_id:  "X1Q6O6UGE482",
+        home_juris_case_id:   "2:20-cv-00159",
+        home_juris_court:     "Washington Eastern",
+        home_juris_doc_id:    "X1Q6O6UGE482",
+      },
+    ];
+
+    function buildDocUrl(court, docId) {
+      if (!court || !docId) return null;
+      // Placeholder URL pattern — swap in the real base URL as needed
+      return `https://ecf.${court.toLowerCase()}.uscourts.gov/doc1/${docId}`;
+    }
+
+    function renderCell(text, href) {
+      if (!text || text.toLowerCase() === "none") {
+        return `<span class="empty-value">—</span>`;
+      }
+      if (href) {
+        return `<a class="case-link" href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      }
+      return text;
+    }
+
+    const tbody = document.getElementById("case-table-body");
+
+    cases.forEach(c => {
+      const memberHref = buildDocUrl(c.consol_juris_court, c.consol_juris_doc_id);
+      const homeHref   = buildDocUrl(c.home_juris_court,  c.home_juris_doc_id);
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${renderCell(c.consol_juris_case_id, memberHref)}</td>
+        <td class="home-col">${renderCell(c.home_juris_case_id, homeHref)}</td>
+        <td class="home-col">${renderCell(c.home_juris_court)}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  </script>
+
+</body>
+</html>
