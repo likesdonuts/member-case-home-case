@@ -202,12 +202,14 @@
     <table>
       <thead>
         <tr class="supertitle">
-          <th class="empty" rowspan="1"></th>
-          <th class="home-case-super" colspan="2">Home Case</th>
+          <th class="empty" colspan="2"></th>
+          <th class="home-case-super" colspan="3">Home Case</th>
         </tr>
         <tr class="col-titles">
           <th>Member Case</th>
+          <th>Case Name</th>
           <th>Case ID</th>
+          <th>Case Name</th>
           <th>Court</th>
         </tr>
       </thead>
@@ -218,25 +220,6 @@
   </div>
 
   <script>
-    const cases = [
-      {
-        consol_juris_case_id: "2:20-cv-01973",
-        consol_juris_court:   "dsc",
-        consol_juris_doc_id:  "X1Q6O6TQBG82",
-        home_juris_case_id:   "none",
-        home_juris_court:     "",
-        home_juris_doc_id:    "",
-      },
-      {
-        consol_juris_case_id: "2:20-cv-02030",
-        consol_juris_court:   "dsc",
-        consol_juris_doc_id:  "X1Q6O6UGE482",
-        home_juris_case_id:   "2:20-cv-00159",
-        home_juris_court:     "Washington Eastern",
-        home_juris_doc_id:    "X1Q6O6UGE482",
-      },
-    ];
-
     const BLAW_BASE = "https://www.bloomberglaw.com/product/blaw/document/";
 
     function buildDocUrl(docId) {
@@ -254,20 +237,36 @@
       return text;
     }
 
-    const tbody = document.getElementById("case-table-body");
+    function renderTable(cases) {
+      const tbody = document.getElementById("case-table-body");
+      cases.forEach(c => {
+        const memberHref = buildDocUrl(c.consol_juris_doc_id);
+        const homeHref   = buildDocUrl(c.home_juris_doc_id);
 
-    cases.forEach(c => {
-      const memberHref = buildDocUrl(c.consol_juris_doc_id);
-      const homeHref   = buildDocUrl(c.home_juris_doc_id);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${renderCell(c.consol_juris_case_id, memberHref)}</td>
+          <td>${renderCell(c.consol_juris_case_name)}</td>
+          <td class="home-col">${renderCell(c.home_juris_case_id, homeHref)}</td>
+          <td class="home-col">${renderCell(c.home_juris_case_name)}</td>
+          <td class="home-col">${renderCell(c.home_juris_court)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
 
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${renderCell(c.consol_juris_case_id, memberHref)}</td>
-        <td class="home-col">${renderCell(c.home_juris_case_id, homeHref)}</td>
-        <td class="home-col">${renderCell(c.home_juris_court)}</td>
-      `;
-      tbody.appendChild(row);
-    });
+    function showError(message) {
+      const tbody = document.getElementById("case-table-body");
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:#c0392b;">${message}</td></tr>`;
+    }
+
+    fetch("case_info_data.json")
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(renderTable)
+      .catch(err => showError(`Failed to load data: ${err.message}`));
   </script>
 
 </body>
