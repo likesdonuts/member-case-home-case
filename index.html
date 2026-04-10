@@ -19,7 +19,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 48px 24px;
+      padding: 40px 32px;
+    }
+
+    .page-header {
+      width: 100%;
+      max-width: 1600px;
+      margin-bottom: 24px;
+      text-align: center;
     }
 
     h1 {
@@ -28,7 +35,6 @@
       letter-spacing: -0.01em;
       color: #1a1a2e;
       margin-bottom: 8px;
-      text-align: center;
     }
 
     .subtitle {
@@ -36,22 +42,20 @@
       font-weight: 600;
       font-style: italic;
       color: #3a3a5e;
-      text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
 
     .case-meta {
-      width: 100%;
-      max-width: 860px;
-      margin-bottom: 16px;
+      text-align: left;
+      display: inline-block;
     }
 
     .case-meta dl {
       display: grid;
       grid-template-columns: max-content 1fr;
-      gap: 6px 16px;
+      gap: 5px 16px;
       font-size: 0.9rem;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .case-meta dt {
@@ -67,12 +71,62 @@
     .case-meta p {
       font-size: 0.9rem;
       color: #444;
-      margin-top: 4px;
     }
 
+    /* Search + status bar */
+    .controls {
+      width: 100%;
+      max-width: 1600px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+      max-width: 480px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+      pointer-events: none;
+    }
+
+    #search-input {
+      width: 100%;
+      padding: 9px 12px 9px 38px;
+      font-size: 0.9rem;
+      border: 1px solid #ccd0dc;
+      border-radius: 6px;
+      background: #fff;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    #search-input:focus {
+      border-color: #4f6ef7;
+      box-shadow: 0 0 0 3px rgba(79,110,247,0.12);
+    }
+
+    .result-count {
+      font-size: 0.85rem;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    /* Table */
     .table-wrapper {
       width: 100%;
-      max-width: 860px;
+      max-width: 1600px;
       overflow-x: auto;
       border-radius: 10px;
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
@@ -82,23 +136,22 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.925rem;
+      font-size: 0.9rem;
+      white-space: nowrap;
     }
 
-    /* Top header row (supertitles) */
     thead tr.supertitle th {
       background: #1a1a2e;
       color: #ffffff;
       font-weight: 600;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      padding: 12px 20px;
+      padding: 11px 16px;
       text-align: center;
     }
 
     thead tr.supertitle th.empty {
-      background: #1a1a2e;
       border-right: 2px solid #3a3a5e;
     }
 
@@ -106,15 +159,14 @@
       border-left: 2px solid rgba(255,255,255,0.15);
     }
 
-    /* Column title row */
     thead tr.col-titles th {
       background: #2d2d4e;
       color: #d0d4e8;
       font-weight: 600;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      padding: 10px 20px;
+      padding: 9px 16px;
       text-align: left;
       border-bottom: 2px solid #4a4a7a;
     }
@@ -123,10 +175,9 @@
       border-left: 1px solid #3a3a5e;
     }
 
-    /* Body rows */
     tbody tr {
       border-bottom: 1px solid #e8eaf0;
-      transition: background 0.15s ease;
+      transition: background 0.12s ease;
     }
 
     tbody tr:last-child {
@@ -138,7 +189,7 @@
     }
 
     tbody td {
-      padding: 16px 20px;
+      padding: 12px 16px;
       vertical-align: middle;
     }
 
@@ -146,18 +197,15 @@
       border-left: 1px solid #e8eaf0;
     }
 
-    /* Member Case column — distinct left border accent */
     tbody td:first-child {
       border-left: 4px solid #4f6ef7;
       font-weight: 500;
     }
 
-    /* Home Case columns — subtle separator */
     tbody td.home-col {
       color: #444;
     }
 
-    /* Hyperlinks */
     a.case-link {
       color: #4f6ef7;
       text-decoration: none;
@@ -169,33 +217,90 @@
       color: #2d4ed8;
     }
 
-    /* Empty / none value */
     .empty-value {
       color: #aab0c6;
       font-style: italic;
+      font-size: 0.82rem;
+    }
+
+    /* Pagination */
+    .pagination {
+      width: 100%;
+      max-width: 1600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .pagination button {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      border: 1px solid #ccd0dc;
+      border-radius: 5px;
+      background: #fff;
+      color: #1a1a2e;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+    }
+
+    .pagination button:hover:not(:disabled) {
+      background: #f0f2f8;
+      border-color: #4f6ef7;
+    }
+
+    .pagination button.active {
+      background: #4f6ef7;
+      color: #fff;
+      border-color: #4f6ef7;
+      font-weight: 600;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .pagination .ellipsis {
+      padding: 6px 4px;
+      color: #888;
       font-size: 0.85rem;
     }
 
-    /* Responsive */
-    @media (max-width: 600px) {
-      h1 { font-size: 1.25rem; }
-      tbody td, thead tr.col-titles th { padding: 12px 14px; }
+    .no-results {
+      text-align: center;
+      padding: 40px 20px;
+      color: #888;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
 
-  <h1>Member Case &ndash; Home Case Look Up</h1>
-  <p class="subtitle">In Re Aqueous Film-Forming Foams Products Liability Litigation</p>
+  <div class="page-header">
+    <h1>Member Case &ndash; Home Case Look Up</h1>
+    <p class="subtitle">In Re Aqueous Film-Forming Foams Products Liability Litigation</p>
+    <div class="case-meta">
+      <dl>
+        <dt>Lead Case Docket Number:</dt>
+        <dd>2:18-mn-2873 (D.S.C.)</dd>
+        <dt>MDL Docket Number:</dt>
+        <dd>2873</dd>
+      </dl>
+      <p>The table below lists the member cases as identified in the lead case.</p>
+    </div>
+  </div>
 
-  <div class="case-meta">
-    <dl>
-      <dt>Lead Case Docket Number:</dt>
-      <dd>2:18-mn-2873 (D.S.C.)</dd>
-      <dt>MDL Docket Number:</dt>
-      <dd>2873</dd>
-    </dl>
-    <p>The table below lists the member cases as identified in the lead case.</p>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input id="search-input" type="search" placeholder="Search cases…" aria-label="Search cases" />
+    </div>
+    <span class="result-count" id="result-count"></span>
   </div>
 
   <div class="table-wrapper">
@@ -214,35 +319,55 @@
         </tr>
       </thead>
       <tbody id="case-table-body">
-        <!-- populated by JavaScript -->
+        <tr><td colspan="5" style="text-align:center;padding:32px;color:#888;">Loading…</td></tr>
       </tbody>
     </table>
   </div>
 
+  <div class="pagination" id="pagination"></div>
+
   <script>
     const BLAW_BASE = "https://www.bloomberglaw.com/product/blaw/document/";
+    const PAGE_SIZE = 100;
+
+    let allCases = [];
+    let filteredCases = [];
+    let currentPage = 1;
 
     function buildDocUrl(docId) {
       if (!docId) return null;
       return `${BLAW_BASE}${docId}`;
     }
 
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
     function renderCell(text, href) {
       if (!text || text.toLowerCase() === "none") {
         return `<span class="empty-value">—</span>`;
       }
+      const safe = escapeHtml(text);
       if (href) {
-        return `<a class="case-link" href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+        return `<a class="case-link" href="${href}" target="_blank" rel="noopener noreferrer">${safe}</a>`;
       }
-      return text;
+      return safe;
     }
 
-    function renderTable(cases) {
+    function renderPage(page) {
       const tbody = document.getElementById("case-table-body");
-      cases.forEach(c => {
+      const start = (page - 1) * PAGE_SIZE;
+      const slice = filteredCases.slice(start, start + PAGE_SIZE);
+
+      if (slice.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="no-results">No matching cases found.</td></tr>`;
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      slice.forEach(c => {
         const memberHref = buildDocUrl(c.consol_juris_doc_id);
         const homeHref   = buildDocUrl(c.home_juris_doc_id);
-
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${renderCell(c.consol_juris_case_id, memberHref)}</td>
@@ -251,21 +376,111 @@
           <td class="home-col">${renderCell(c.home_juris_case_name)}</td>
           <td class="home-col">${renderCell(c.home_juris_court)}</td>
         `;
-        tbody.appendChild(row);
+        fragment.appendChild(row);
+      });
+
+      tbody.innerHTML = "";
+      tbody.appendChild(fragment);
+    }
+
+    function renderPagination() {
+      const container = document.getElementById("pagination");
+      const totalPages = Math.ceil(filteredCases.length / PAGE_SIZE);
+
+      if (totalPages <= 1) {
+        container.innerHTML = "";
+        return;
+      }
+
+      const buttons = [];
+
+      const addBtn = (label, page, isActive = false, isDisabled = false) => {
+        buttons.push(`<button ${isDisabled ? "disabled" : ""} ${isActive ? 'class="active"' : ""} data-page="${page}">${label}</button>`);
+      };
+
+      const addEllipsis = () => buttons.push(`<span class="ellipsis">&hellip;</span>`);
+
+      addBtn("&laquo; Prev", currentPage - 1, false, currentPage === 1);
+
+      if (totalPages <= 9) {
+        for (let i = 1; i <= totalPages; i++) addBtn(i, i, i === currentPage);
+      } else {
+        addBtn(1, 1, currentPage === 1);
+        if (currentPage > 4) addEllipsis();
+        for (let i = Math.max(2, currentPage - 2); i <= Math.min(totalPages - 1, currentPage + 2); i++) {
+          addBtn(i, i, i === currentPage);
+        }
+        if (currentPage < totalPages - 3) addEllipsis();
+        addBtn(totalPages, totalPages, currentPage === totalPages);
+      }
+
+      addBtn("Next &raquo;", currentPage + 1, false, currentPage === totalPages);
+
+      container.innerHTML = buttons.join("");
+      container.querySelectorAll("button[data-page]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentPage = parseInt(btn.dataset.page);
+          renderPage(currentPage);
+          renderPagination();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
       });
     }
 
-    function showError(message) {
-      const tbody = document.getElementById("case-table-body");
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:#c0392b;">${message}</td></tr>`;
+    function updateResultCount() {
+      const el = document.getElementById("result-count");
+      const total = allCases.length;
+      const filtered = filteredCases.length;
+      if (filtered === total) {
+        el.textContent = `${total.toLocaleString()} cases`;
+      } else {
+        el.textContent = `${filtered.toLocaleString()} of ${total.toLocaleString()} cases`;
+      }
     }
+
+    function applySearch(query) {
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        filteredCases = allCases;
+      } else {
+        filteredCases = allCases.filter(c =>
+          (c.consol_juris_case_id  || "").toLowerCase().includes(q) ||
+          (c.consol_juris_case_name|| "").toLowerCase().includes(q) ||
+          (c.home_juris_case_id    || "").toLowerCase().includes(q) ||
+          (c.home_juris_case_name  || "").toLowerCase().includes(q) ||
+          (c.home_juris_court      || "").toLowerCase().includes(q)
+        );
+      }
+      currentPage = 1;
+      updateResultCount();
+      renderPage(currentPage);
+      renderPagination();
+    }
+
+    function showError(message) {
+      document.getElementById("case-table-body").innerHTML =
+        `<tr><td colspan="5" style="text-align:center;padding:24px;color:#c0392b;">${message}</td></tr>`;
+    }
+
+    // Debounce search input
+    let searchTimer;
+    document.getElementById("search-input").addEventListener("input", e => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => applySearch(e.target.value), 200);
+    });
 
     fetch("case_info_data.json")
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
-      .then(renderTable)
+      .then(data => {
+        allCases = data;
+        filteredCases = data;
+        updateResultCount();
+        renderPage(1);
+        renderPagination();
+      })
       .catch(err => showError(`Failed to load data: ${err.message}`));
   </script>
 
