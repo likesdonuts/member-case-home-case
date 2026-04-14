@@ -24,7 +24,7 @@
 
     .page-header {
       width: 100%;
-      max-width: 1600px;
+      max-width: 1900px;
       margin-bottom: 24px;
       text-align: center;
     }
@@ -74,9 +74,38 @@
     }
 
     /* Search + status bar */
+    .case-counts {
+      width: 100%;
+      max-width: 1900px;
+      display: flex;
+      gap: 32px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .case-count-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .case-count-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #888;
+    }
+
+    .case-count-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
     .controls {
       width: 100%;
-      max-width: 1600px;
+      max-width: 1900px;
       display: flex;
       align-items: center;
       gap: 16px;
@@ -126,7 +155,7 @@
     /* Table */
     .table-wrapper {
       width: 100%;
-      max-width: 1600px;
+      max-width: 1900px;
       overflow-x: auto;
       border-radius: 10px;
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
@@ -226,7 +255,7 @@
     /* Pagination */
     .pagination {
       width: 100%;
-      max-width: 1600px;
+      max-width: 1900px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -292,6 +321,17 @@
         <dd><a href="https://www.bloomberglaw.com/product/blaw/document/XRN3DSRG000N" target="_blank" rel="noopener noreferrer">357 F. Supp. 3d 1391 (J.P.M.L. Dec. 7, 2018)</a></dd>
       </dl>
       <p>The table below lists the member cases as identified in the lead case.</p>
+    </div>
+  </div>
+
+  <div class="case-counts">
+    <div class="case-count-item">
+      <span class="case-count-label">Member Cases</span>
+      <span class="case-count-value" id="count-member">—</span>
+    </div>
+    <div class="case-count-item">
+      <span class="case-count-label">Home Cases</span>
+      <span class="case-count-value" id="count-home">—</span>
     </div>
   </div>
 
@@ -479,6 +519,14 @@
       .then(data => {
         allCases = data;
         filteredCases = data;
+
+        const memberCount = data.length;
+        const homeCount = data.filter(c =>
+          c.home_juris_case_id && c.home_juris_case_id.toLowerCase() !== "none" && c.home_juris_case_id.trim() !== ""
+        ).length;
+        document.getElementById("count-member").textContent = memberCount.toLocaleString();
+        document.getElementById("count-home").textContent = homeCount.toLocaleString();
+
         updateResultCount();
         renderPage(1);
         renderPagination();
