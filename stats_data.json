@@ -1,0 +1,96 @@
+{
+  "member_case_count": 22459,
+  "jpml_case_count": 19898,
+  "jpml_by_status": [
+    {
+      "status": "NTN",
+      "total": 13835,
+      "matched_as_home_case": 96,
+      "matched_as_member_case": 13828
+    },
+    {
+      "status": "Closed",
+      "total": 4575,
+      "matched_as_home_case": 97,
+      "matched_as_member_case": 4506
+    },
+    {
+      "status": "CTO Final",
+      "total": 1241,
+      "matched_as_home_case": 1225,
+      "matched_as_member_case": 142
+    },
+    {
+      "status": "Transfer",
+      "total": 140,
+      "matched_as_home_case": 139,
+      "matched_as_member_case": 6
+    },
+    {
+      "status": "Denied",
+      "total": 37,
+      "matched_as_home_case": 0,
+      "matched_as_member_case": 1
+    },
+    {
+      "status": "No Action Taken",
+      "total": 31,
+      "matched_as_home_case": 0,
+      "matched_as_member_case": 0
+    },
+    {
+      "status": "Not Related",
+      "total": 9,
+      "matched_as_home_case": 1,
+      "matched_as_member_case": 0
+    },
+    {
+      "status": "f/k/a Minnesota Mining and Manufacturing Company et al (NTN",
+      "total": 8,
+      "matched_as_home_case": 0,
+      "matched_as_member_case": 7
+    },
+    {
+      "status": "State Court",
+      "total": 6,
+      "matched_as_home_case": 0,
+      "matched_as_member_case": 1
+    },
+    {
+      "status": "f/k/a Minnesota et al (NTN",
+      "total": 5,
+      "matched_as_home_case": 0,
+      "matched_as_member_case": 5
+    },
+    {
+      "status": "(blank)",
+      "total": 4,
+      "matched_as_home_case": 0,
+      "matched_as_member_case": 3
+    },
+    {
+      "status": "CTO Opposed",
+      "total": 3,
+      "matched_as_home_case": 0,
+      "matched_as_member_case": 0
+    },
+    {
+      "status": "Pending",
+      "total": 2,
+      "matched_as_home_case": 0,
+      "matched_as_member_case": 1
+    },
+    {
+      "status": "Motion/Tag Along",
+      "total": 1,
+      "matched_as_home_case": 0,
+      "matched_as_member_case": 0
+    },
+    {
+      "status": "CRO/Remand Final",
+      "total": 1,
+      "matched_as_home_case": 1,
+      "matched_as_member_case": 0
+    }
+  ]
+}

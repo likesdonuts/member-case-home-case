@@ -22,6 +22,41 @@
       padding: 40px 32px;
     }
 
+    .nav {
+      width: 100%;
+      max-width: 1900px;
+      display: flex;
+      gap: 4px;
+      margin-bottom: 28px;
+      border-bottom: 2px solid #d0d4e8;
+    }
+
+    .nav a {
+      padding: 10px 22px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #555;
+      text-decoration: none;
+      border-radius: 6px 6px 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      position: relative;
+      bottom: -2px;
+      transition: color 0.15s;
+    }
+
+    .nav a:hover {
+      color: #1a1a2e;
+      background: #eceef5;
+    }
+
+    .nav a.active {
+      color: #4f6ef7;
+      background: #fff;
+      border-color: #d0d4e8;
+      border-bottom-color: #fff;
+    }
+
     .page-header {
       width: 100%;
       max-width: 1900px;
@@ -307,6 +342,11 @@
   </style>
 </head>
 <body>
+
+  <nav class="nav">
+    <a href="index.html" class="active">Member Case Look Up</a>
+    <a href="stats.html">Statistics</a>
+  </nav>
 
   <div class="page-header">
     <h1>Member Case &ndash; Home Case Look Up</h1>
