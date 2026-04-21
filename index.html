@@ -187,6 +187,27 @@
       white-space: nowrap;
     }
 
+    .export-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      background: #4f6ef7;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+      margin-left: auto;
+    }
+
+    .export-btn:hover {
+      background: #2d4ed8;
+    }
+
     /* Table */
     .table-wrapper {
       width: 100%;
@@ -205,9 +226,8 @@
     }
 
     thead tr.supertitle th {
-      background: #1a1a2e;
       color: #ffffff;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.78rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -215,28 +235,42 @@
       text-align: center;
     }
 
-    thead tr.supertitle th.empty {
-      border-right: 2px solid #3a3a5e;
+    thead tr.supertitle th.member-super {
+      background: #1a3a5e;
+      border-right: 3px solid #ffffff;
     }
 
     thead tr.supertitle th.home-case-super {
-      border-left: 2px solid rgba(255,255,255,0.15);
+      background: #1a5e3a;
+      border-left: 3px solid #ffffff;
     }
 
     thead tr.col-titles th {
-      background: #2d2d4e;
-      color: #d0d4e8;
+      color: #ffffff;
       font-weight: 600;
       font-size: 0.75rem;
       letter-spacing: 0.05em;
       text-transform: uppercase;
       padding: 9px 16px;
       text-align: left;
-      border-bottom: 2px solid #4a4a7a;
     }
 
-    thead tr.col-titles th:not(:first-child) {
-      border-left: 1px solid #3a3a5e;
+    thead tr.col-titles th.member-col {
+      background: #1e4a75;
+      border-bottom: 2px solid #2d6aa8;
+    }
+
+    thead tr.col-titles th.home-col-header {
+      background: #1e6b45;
+      border-bottom: 2px solid #2d9660;
+    }
+
+    thead tr.col-titles th.member-col:not(:first-child) {
+      border-left: 1px solid #2d5e8a;
+    }
+
+    thead tr.col-titles th.home-col-header:not(:first-child) {
+      border-left: 1px solid #2d8055;
     }
 
     thead tr.col-titles th.sortable {
@@ -244,8 +278,12 @@
       user-select: none;
     }
 
-    thead tr.col-titles th.sortable:hover {
-      background: #3a3a62;
+    thead tr.col-titles th.member-col.sortable:hover {
+      background: #265d90;
+    }
+
+    thead tr.col-titles th.home-col-header.sortable:hover {
+      background: #257a4e;
     }
 
     thead tr.col-titles th.sort-asc .sort-icon::after  { content: " ▲"; }
@@ -406,21 +444,27 @@
       <input id="search-input" type="search" placeholder="Search cases…" aria-label="Search cases" />
     </div>
     <span class="result-count" id="result-count"></span>
+    <button class="export-btn" id="export-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Export CSV
+    </button>
   </div>
 
   <div class="table-wrapper">
     <table>
       <thead>
         <tr class="supertitle">
-          <th colspan="2">Member Cases in D. South Carolina</th>
+          <th class="member-super" colspan="2">Member Cases in D. South Carolina</th>
           <th class="home-case-super" colspan="3">Home Case</th>
         </tr>
         <tr class="col-titles">
-          <th data-col="consol_juris_case_id" class="sortable">Member Case <span class="sort-icon">⇅</span></th>
-          <th data-col="consol_juris_case_name" class="sortable">Case Name <span class="sort-icon">⇅</span></th>
-          <th data-col="home_juris_case_id" class="sortable">Case ID <span class="sort-icon">⇅</span></th>
-          <th data-col="home_juris_case_name" class="sortable">Case Name <span class="sort-icon">⇅</span></th>
-          <th data-col="home_juris_court" class="sortable">Court <span class="sort-icon">⇅</span></th>
+          <th data-col="consol_juris_case_id" class="member-col sortable">Member Case <span class="sort-icon">⇅</span></th>
+          <th data-col="consol_juris_case_name" class="member-col sortable">Case Name <span class="sort-icon">⇅</span></th>
+          <th data-col="home_juris_case_id" class="home-col-header sortable">Case ID <span class="sort-icon">⇅</span></th>
+          <th data-col="home_juris_case_name" class="home-col-header sortable">Case Name <span class="sort-icon">⇅</span></th>
+          <th data-col="home_juris_court" class="home-col-header sortable">Court <span class="sort-icon">⇅</span></th>
         </tr>
       </thead>
       <tbody id="case-table-body">
@@ -594,6 +638,32 @@
     }
 
     // Debounce search input
+    function exportCsv() {
+      const headers = [
+        "Member Case", "Member Case Name",
+        "Home Case ID", "Home Case Name", "Home Court"
+      ];
+      const rows = filteredCases.map(c => [
+        c.consol_juris_case_id   || "",
+        c.consol_juris_case_name || "",
+        c.home_juris_case_id     || "",
+        c.home_juris_case_name   || "",
+        c.home_juris_court       || ""
+      ]);
+
+      const escape = v => `"${String(v).replace(/"/g, '""')}"`;
+      const csv = [headers, ...rows].map(r => r.map(escape).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `member_cases_export_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("export-btn").addEventListener("click", exportCsv);
+
     let searchTimer;
     document.getElementById("search-input").addEventListener("input", e => {
       clearTimeout(searchTimer);
