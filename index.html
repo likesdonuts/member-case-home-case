@@ -239,6 +239,29 @@
       border-left: 1px solid #3a3a5e;
     }
 
+    thead tr.col-titles th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    thead tr.col-titles th.sortable:hover {
+      background: #3a3a62;
+    }
+
+    thead tr.col-titles th.sort-asc .sort-icon::after  { content: " ▲"; }
+    thead tr.col-titles th.sort-desc .sort-icon::after { content: " ▼"; }
+
+    .sort-icon {
+      opacity: 0.45;
+      font-size: 0.7rem;
+    }
+
+    thead tr.col-titles th.sort-asc .sort-icon,
+    thead tr.col-titles th.sort-desc .sort-icon {
+      opacity: 1;
+      color: #a0aaff;
+    }
+
     tbody tr {
       border-bottom: 1px solid #e8eaf0;
       transition: background 0.12s ease;
@@ -389,15 +412,15 @@
     <table>
       <thead>
         <tr class="supertitle">
-          <th colspan="2">Lead Case</th>
+          <th colspan="2">Member Cases in D. South Carolina</th>
           <th class="home-case-super" colspan="3">Home Case</th>
         </tr>
         <tr class="col-titles">
-          <th>Member Case</th>
-          <th>Case Name</th>
-          <th>Case ID</th>
-          <th>Case Name</th>
-          <th>Court</th>
+          <th data-col="consol_juris_case_id" class="sortable">Member Case <span class="sort-icon">⇅</span></th>
+          <th data-col="consol_juris_case_name" class="sortable">Case Name <span class="sort-icon">⇅</span></th>
+          <th data-col="home_juris_case_id" class="sortable">Case ID <span class="sort-icon">⇅</span></th>
+          <th data-col="home_juris_case_name" class="sortable">Case Name <span class="sort-icon">⇅</span></th>
+          <th data-col="home_juris_court" class="sortable">Court <span class="sort-icon">⇅</span></th>
         </tr>
       </thead>
       <tbody id="case-table-body">
@@ -415,6 +438,8 @@
     let allCases = [];
     let filteredCases = [];
     let currentPage = 1;
+    let sortCol = null;
+    let sortDir = "asc";
 
     function buildDocUrl(docId) {
       if (!docId) return null;
@@ -520,10 +545,33 @@
       }
     }
 
+    function applySort() {
+      if (!sortCol) return;
+      filteredCases.sort((a, b) => {
+        const av = (a[sortCol] || "").toLowerCase();
+        const bv = (b[sortCol] || "").toLowerCase();
+        if (av < bv) return sortDir === "asc" ? -1 : 1;
+        if (av > bv) return sortDir === "asc" ?  1 : -1;
+        return 0;
+      });
+    }
+
+    function updateSortHeaders() {
+      document.querySelectorAll("thead tr.col-titles th.sortable").forEach(th => {
+        th.classList.remove("sort-asc", "sort-desc");
+        const icon = th.querySelector(".sort-icon");
+        icon.textContent = "⇅";
+        if (th.dataset.col === sortCol) {
+          th.classList.add(sortDir === "asc" ? "sort-asc" : "sort-desc");
+          icon.textContent = "";
+        }
+      });
+    }
+
     function applySearch(query) {
       const q = query.trim().toLowerCase();
       if (!q) {
-        filteredCases = allCases;
+        filteredCases = [...allCases];
       } else {
         filteredCases = allCases.filter(c =>
           (c.consol_juris_case_id  || "").toLowerCase().includes(q) ||
@@ -533,6 +581,7 @@
           (c.home_juris_court      || "").toLowerCase().includes(q)
         );
       }
+      applySort();
       currentPage = 1;
       updateResultCount();
       renderPage(currentPage);
@@ -558,7 +607,7 @@
       })
       .then(data => {
         allCases = data;
-        filteredCases = data;
+        filteredCases = [...data];
 
         const memberCount = data.length;
         const homeCount = data.filter(c =>
@@ -566,6 +615,24 @@
         ).length;
         document.getElementById("count-member").textContent = memberCount.toLocaleString();
         document.getElementById("count-home").textContent = homeCount.toLocaleString();
+
+        // Wire up sortable column headers
+        document.querySelectorAll("thead tr.col-titles th.sortable").forEach(th => {
+          th.addEventListener("click", () => {
+            const col = th.dataset.col;
+            if (sortCol === col) {
+              sortDir = sortDir === "asc" ? "desc" : "asc";
+            } else {
+              sortCol = col;
+              sortDir = "asc";
+            }
+            applySort();
+            updateSortHeaders();
+            currentPage = 1;
+            renderPage(1);
+            renderPagination();
+          });
+        });
 
         updateResultCount();
         renderPage(1);
